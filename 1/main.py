@@ -84,10 +84,10 @@ def time_lapse(func):
 def trace(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print_(args[0],"----")
+        print_(args[0],"--->")
         res = func(*args, **kwargs)
 #        if res < 2: print(res)
-        print(res)
+        print_('<---')
         return res
     return wrapper
 
@@ -114,8 +114,11 @@ def print_(*args,**kwargs):
 @trace
 def fibonation(num):
     num=int(num)
+    fibonation.count+=1
+    print(f'this is {fibonation.count} call of fibo func')
     if num<2:
         return num
+
     return fibonation(num-2) + fibonation(num-1)
 
 
@@ -135,4 +138,5 @@ print("result is:",list(my_function(alist,ODD_)))
 print("result is:",list(my_function(alist,PRIME_)))
 
 n = 10
+fibonation.count = 0
 print(f'{n}th fibo number is {fibonation(n)}')
