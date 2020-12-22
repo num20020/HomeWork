@@ -1,23 +1,12 @@
-import operator
-import time
-#import functools
-
 # Home work number 1
 
-# function returns list with some degree of numbers, that are in Lst
+import operator
+import time
+from functools import wraps
 
-
-# old version:
-
-# def Power(Lst, Deg=2):
-#     Ret = []
-#     for i in Lst:
-#         # print(type(i))
-#         if type(i) == int:
-#             Ret.append(i ** Deg)
-#     return Ret
-
-# new version
+EVEN = 1
+ODD = 2
+PRIME = 3
 
 degrees = {"Square":2,"Cube":3,"Fourth":4}
 
@@ -25,47 +14,16 @@ def repeater(n):
     while True:
         yield n
 
+# function returns list with some degree of numbers, that are in Lst
 
 def power(lst, deg="Square"):
     return list(map(operator.pow,lst,repeater(degrees[deg])))
-
-
-# old version:
-
-# function check numbers in list for: 1. even 2. odd 3. prime by you choice
-# and returns a list of suitable
-
-# def MyFunction(Lst, Choice=1):
-#     Ret = []
-#     for i in Lst:
-#         if Choice == 1:
-#             if i % 2 == 0: Ret.append(i)
-#         elif Choice == 2:
-#             if i % 2 == 1: Ret.append(i)
-#         elif Choice == 3:
-#             Flag = True
-#             for n in range(2,int(i/2)+1):
-#                 if i % n == 0:
-#                     Flag = False
-#                     break
-#             if Flag: Ret.append(i)
-#     return Ret
-
-# new version
-
-EVEN_ = 1
-ODD_ = 2
-PRIME_ = 3
 
 def is_prime(num):
     for i in range(2, int(num/2)+1):
         if num % i == 0:
             return False
     return True
-
-
-
-from functools import wraps
 
 #decorator for measuring time lapse of func
 
@@ -84,10 +42,9 @@ def time_lapse(func):
 def trace(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print_(args[0],"--->")
+        print_(args[0],"----")
         res = func(*args, **kwargs)
-#        if res < 2: print(res)
-        print_('<---')
+        print(res)
         return res
     return wrapper
 
@@ -95,13 +52,13 @@ def trace(func):
 #according caller choice
 
 @time_lapse
-def my_function(lst, choice = EVEN_):
+def my_function(lst, choice = EVEN):
     ret = []
-    if choice == EVEN_:
+    if choice == EVEN:
         ret = filter(lambda x: x % 2 == 0, lst)
-    elif choice == ODD_:
+    elif choice == ODD:
         ret = filter(lambda x: x % 2 == 1, lst)
-    elif choice == PRIME_:
+    elif choice == PRIME:
         ret = filter(is_prime, lst)
     return ret
 
@@ -114,29 +71,21 @@ def print_(*args,**kwargs):
 @trace
 def fibonation(num):
     num=int(num)
-    fibonation.count+=1
-    print(f'this is {fibonation.count} call of fibo func')
     if num<2:
         return num
+    return fibonation(num-1)+fibonation(num-2)
 
-    return fibonation(num-2) + fibonation(num-1)
+if __name__ == "__main__":
 
+    print(power([1, 2, 3]))
+    print(power([1, 2, 3], "Cube"))
+    print(power([1, 2, 3], "Fourth"))
 
+    alist = range(1,60)
 
-print(power([1, 2, 3]))
-print(power([1, 2, 3], "Cube"))
-print(power([1, 2, 3], "Fourth"))
+    print("result is: ",list(my_function(alist)))
+    print("result is:",list(my_function(alist,ODD)))
+    print("result is:",list(my_function(alist,PRIME)))
 
-
-alist = range(1,60)
-
-
-print("result is: ",list(my_function(alist)))
-
-print("result is:",list(my_function(alist,ODD_)))
-
-print("result is:",list(my_function(alist,PRIME_)))
-
-n = 10
-fibonation.count = 0
-print(f'{n}th fibo number is {fibonation(n)}')
+    n = 10
+    print(f'{n}th fibo number is {fibonation(n)}')
